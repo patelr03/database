@@ -1,0 +1,17 @@
+<students>
+  <student>
+    <sfname>khushi</sfname>
+    <slname>patel</slname>
+    <sid>1</sid>
+  </student>
+  <student>
+    <sfname>luv</sfname>
+    <slname>patel</slname>
+    <sid>2</sid>
+  </student>
+  <student>
+    <sfname>jay</sfname>
+    <slname>patel</slname>
+    <sid>3</sid>
+  </student>
+</students>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="93763903-8964-4aa3-9c6c-db38b81f9c30" >
+		<http:listener-connection host="0.0.0.0" port="${http.port}" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="492fdeab-4a1e-4d5c-b8ab-d067047300a0" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="Rupalpatel1" database="student" />
+	</db:config>
+	<flow name="testexFlow" doc:id="622091f4-9511-4176-9f98-822211843a54" >
+		<http:listener doc:name="Listener" doc:id="2b1f72c6-6f97-4965-bc92-590f023c431e" config-ref="HTTP_Listener_config" path="/insert"/>
+		<ee:transform doc:name="Transform Message" doc:id="86805ec4-8958-4440-826b-55db176efaef" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload.students.*student map ( student , indexOfStudent ) -> {
+	inslname: student.slname,
+	insid: student.sid as String,
+	insfname: student.sfname
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<db:bulk-insert doc:name="Bulk insert" doc:id="49527a8a-1ec7-4c76-bccf-16c862b1e56f" config-ref="Database_Config">
+			<db:sql >INSERT INTO STUDENT VALUES(:inslname,:insfname,:insid)</db:sql>
+		</db:bulk-insert>
+	</flow>
+</mule>
